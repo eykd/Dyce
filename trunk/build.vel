@@ -1,0 +1,76 @@
+options(default "run")
+
+imports[module(from 'remove')
+        ]
+
+depends(
+    bootstrap ['dirs']
+    buildout ['bootstrap' 'dirs']
+    buildout_offline ['bootstrap' 'dirs']
+    clean_all ['clean_dist' 'clean_docs' 'clean_env']
+    clean []
+    clean_build ['clean']
+    clean_env ['clean']
+    clean_dist ['clean_build']
+    docs ['dirs']
+    rebuild ['clean_env' 'buildout']
+    run ['buildout']
+    debug ['buildout']
+    headless ['buildout']
+    py2app ['buildout']
+    )
+
+targets(
+    update [$ rm -f ./ez_setup.py
+            $ wget http://peak.telecommunity.com/dist/ez_setup.py
+            ]
+
+    bootstrap [unless "os.path.exists('./bin/buildout')"
+               $ python2.5 bootstrap.py
+               ]
+    buildout [unless "os.path.exists('./bin/python-local')"
+              $ ./bin/buildout
+              ]
+    buildout_offline [unless "os.path.exists('./bin/python-local')"
+              $ ./bin/buildout -o
+              ]
+    clean [forall(files "*.pyc" var "file" do remove(paths ["%(file)s"]))
+           forall(files "*~" var "file" do remove(paths ["%(file)s"]))
+           forall(files "*.pyo" var "file" do remove(paths ["%(file)s"]))
+           forall(files "*#" var "file" do remove(paths ["%(file)s"]))
+           forall(files ".#*" var "file" do remove(paths ["%(file)s"]))
+           forall(files "*.lock" var "file" do remove(paths ["%(file)s"]))
+           forall(files "src/*.o" var "file" do remove(paths ["%(file)s"]))
+           forall(files "src/*.so" var "file" do remove(paths ["%(file)s"]))
+           forall(files "*.log*" var "file" do remove(paths ["%(file)s"]))
+           forall(files "*testdb*" var "file" do remove(paths ["%(file)s"]))
+           forall(files "*.zdb*" var "file" do remove(paths ["%(file)s"]))
+           forall(files "kit.*.c" var "file" do remove(paths ["%(file)s"]))
+           ]
+    clean_docs [remove(paths ['docs'] force "True")]
+    clean_build [remove(paths ['build'] force "True")]
+    clean_buildout remove(paths ['bin/python-local'])
+    clean_env [remove(paths ['downloads'
+                             'develop-eggs'
+                             'parts'
+                             'bin'
+                             'eggs'
+                             '.installed.cfg']
+                      force "True")
+               ]
+    clean_dist [remove(paths ['dist'] force "True")]
+    clean_lang [forall(files "*.lingo" var "file" 
+    	       		     do remove(paths ["%(file)s"]))
+		]
+    dirs mkdirs(paths ["docs/html" 
+                       "downloads"]
+        mode 0755)
+    docs $ epydoc --config epydoc.config
+    py2app $ ./bin/python-local setup.py py2app
+    rebuild py [|pass
+                 ]
+    run $ ./bin/python-local src/kernel.py
+    debug $ ./bin/python-local src/kernel_debug.py
+    headless $ ./bin/python-local src/kernel_headless.py
+    test $ ./bin/nosetests -vxd
+    )
