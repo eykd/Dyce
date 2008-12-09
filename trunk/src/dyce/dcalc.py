@@ -10,7 +10,8 @@ The calculator also supports a number of pseudorandom number
 expressions:
 
 n d s -> a dice expression, where n is the number of dice, and s is
-    the number of sides per die.  The result is the sum of the roll.
+    the number of sides per die (i.e. 2d6 for two six-sided dice. The
+    result is the sum of the roll.
 
 [min - max] -> return an int between min and max, inclusive, on the
     uniform distribution.
@@ -43,9 +44,10 @@ __date__ = "$Date$"
 
 from string import strip, atoi, atof
 import dice
-import log
+import logging
+logger = logging.getLogger('dcalc')
 
-DEBUG_LEVEL = log.SILENT
+__all__ = ['Dstr', 'parseDstr']
 
 dparse = dice.parse
 dsum = dice.roller.rollsum
@@ -62,7 +64,7 @@ def lookup(map, name):
     for x,v in map:  
         if x == name: return v
     if not globalvars.has_key(name): 
-        log.out('Undefined (defaulting to 0): %s' % (name,), DEBUG_LEVEL)
+        logger.info('Undefined (defaulting to 0): %s', name)
     return globalvars.get(name, 0)
 
 
@@ -110,7 +112,7 @@ class Calculator(yappsrt.Parser):
         if _token not in ['"set"', '"u\\\\("']:
             expr = self.expr([], _context)
             END = self._scan('END')
-            log.out(' =%s' % expr, DEBUG_LEVEL)
+            logger.info(' =%s', expr)
             return expr
         elif _token == '"set"':
             self._scan('"set"')
@@ -118,7 +120,7 @@ class Calculator(yappsrt.Parser):
             expr = self.expr([], _context)
             END = self._scan('END')
             globalvars[VAR] = expr
-            log.out(' %s=%s' % (VAR, expr), DEBUG_LEVEL)
+            logger.info(' %s=%s', VAR, expr)
             return expr
         else: # == '"u\\\\("'
             self._scan('"u\\\\("')
@@ -127,7 +129,7 @@ class Calculator(yappsrt.Parser):
             VAR = self._scan('VAR')
             self._scan('"\\\\)"')
             END = self._scan('END')
-            log.out(' =(%s, "%s")' % (expr, VAR), DEBUG_LEVEL)
+            logger.info(' =(%s, "%s")', expr, VAR)
             return (expr, str(VAR))
 
     def expr(self, V, _parent=None):
@@ -254,7 +256,9 @@ def parse(rule, text):
 def calculate(dice_str):
     return parse('goal', dice_str)
 
-class dstr(object):
+parseDstr = calculate
+
+class Dstr(object):
     __slots__ = ('_dstr', '__weakref__')
 
     def __init__(self, dcalc_str=''):
@@ -283,7 +287,7 @@ class dstr(object):
 
 
 if __name__=='__main__':
-    print 'Welcome to the calculator sample for Yapps 2.'
+    print 'Welcome to the dice calculator for dyce!'
     print '  Enter either "<expression>" or "set <var> <expression>",'
     print '  or just press return to exit.  An expression can have'
     print '  local variables:  let x = expr in expr'
@@ -291,7 +295,7 @@ if __name__=='__main__':
     # `goal' rule use (expr | set var expr)*, but by putting the
     # loop into Python code, we can make it interactive (i.e., enter
     # one expression, get the result, enter another expression, etc.)
-    DEBUG_LEVEL = log.DEBUG
+    DEBUG_LEVEL = 10
     while 1:
         try: s = raw_input('>>> ')
 	except EOFError: break

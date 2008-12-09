@@ -34,18 +34,15 @@ targets(
     buildout_offline [unless "os.path.exists('./bin/python-local')"
               $ ./bin/buildout -o
               ]
+    dcalc [$ yapps2 ./src/dyce/dcalc.g ./src/dyce/dcalc.py 
+           ]
     clean [forall(files "*.pyc" var "file" do remove(paths ["%(file)s"]))
            forall(files "*~" var "file" do remove(paths ["%(file)s"]))
            forall(files "*.pyo" var "file" do remove(paths ["%(file)s"]))
            forall(files "*#" var "file" do remove(paths ["%(file)s"]))
            forall(files ".#*" var "file" do remove(paths ["%(file)s"]))
            forall(files "*.lock" var "file" do remove(paths ["%(file)s"]))
-           forall(files "src/*.o" var "file" do remove(paths ["%(file)s"]))
-           forall(files "src/*.so" var "file" do remove(paths ["%(file)s"]))
            forall(files "*.log*" var "file" do remove(paths ["%(file)s"]))
-           forall(files "*testdb*" var "file" do remove(paths ["%(file)s"]))
-           forall(files "*.zdb*" var "file" do remove(paths ["%(file)s"]))
-           forall(files "kit.*.c" var "file" do remove(paths ["%(file)s"]))
            ]
     clean_docs [remove(paths ['docs'] force "True")]
     clean_build [remove(paths ['build'] force "True")]
@@ -59,18 +56,10 @@ targets(
                       force "True")
                ]
     clean_dist [remove(paths ['dist'] force "True")]
-    clean_lang [forall(files "*.lingo" var "file" 
-    	       		     do remove(paths ["%(file)s"]))
-		]
-    dirs mkdirs(paths ["docs/html" 
-                       "downloads"]
+    dirs mkdirs(paths ["downloads"]
         mode 0755)
     docs $ epydoc --config epydoc.config
-    py2app $ ./bin/python-local setup.py py2app
     rebuild py [|pass
                  ]
-    run $ ./bin/python-local src/kernel.py
-    debug $ ./bin/python-local src/kernel_debug.py
-    headless $ ./bin/python-local src/kernel_headless.py
     test $ ./bin/nosetests -vxd
     )

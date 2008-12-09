@@ -10,7 +10,8 @@ The calculator also supports a number of pseudorandom number
 expressions:
 
 n d s -> a dice expression, where n is the number of dice, and s is
-    the number of sides per die.  The result is the sum of the roll.
+    the number of sides per die (i.e. 2d6 for two six-sided dice. The
+    result is the sum of the roll.
 
 [min - max] -> return an int between min and max, inclusive, on the
     uniform distribution.
@@ -43,9 +44,10 @@ __date__ = "$Date$"
 
 from string import strip, atoi, atof
 import dice
-import log
+import logging
+logger = logging.getLogger('dcalc')
 
-DEBUG_LEVEL = log.SILENT
+__all__ = ['Dstr', 'parseDstr']
 
 dparse = dice.parse
 dsum = dice.roller.rollsum
@@ -62,7 +64,7 @@ def lookup(map, name):
     for x,v in map:  
         if x == name: return v
     if not globalvars.has_key(name): 
-        log.out('Undefined (defaulting to 0): %s' % (name,), DEBUG_LEVEL)
+        logger.info('Undefined (defaulting to 0): %s', name)
     return globalvars.get(name, 0)
 
 %%
@@ -75,13 +77,13 @@ parser Calculator:
     token VAR: "[a-zA-Z_]+"
 
     # Each line can either be an expression or an assignment statement
-    rule goal:   expr<<[]>> END            {{ log.out(' =%s' % expr, DEBUG_LEVEL) }}
+    rule goal:   expr<<[]>> END            {{ logger.info(' =%s', expr) }}
                                            {{ return expr }}
                | "set" VAR expr<<[]>> END  {{ globalvars[VAR] = expr }}
-                                           {{ log.out(' %s=%s' % (VAR, expr), DEBUG_LEVEL) }}
+                                           {{ logger.info(' %s=%s', VAR, expr) }}
                                            {{ return expr }}
 
-               | "u\\(" expr<<[]>> "," VAR "\\)" END  {{ log.out(' =(%s, "%s")' % (expr, VAR), DEBUG_LEVEL)}}
+               | "u\\(" expr<<[]>> "," VAR "\\)" END  {{ logger.info(' =(%s, "%s")', expr, VAR)}}
                                                           {{ return (expr, str(VAR)) }}
 
     # An expression is the sum and difference of factors
@@ -119,7 +121,9 @@ parser Calculator:
 def calculate(dice_str):
     return parse('goal', dice_str)
 
-class dstr(object):
+parseDstr = calculate
+
+class Dstr(object):
     __slots__ = ('_dstr', '__weakref__')
 
     def __init__(self, dcalc_str=''):
@@ -148,7 +152,7 @@ class dstr(object):
 
 
 if __name__=='__main__':
-    print 'Welcome to the calculator sample for Yapps 2.'
+    print 'Welcome to the dice calculator for dyce!'
     print '  Enter either "<expression>" or "set <var> <expression>",'
     print '  or just press return to exit.  An expression can have'
     print '  local variables:  let x = expr in expr'

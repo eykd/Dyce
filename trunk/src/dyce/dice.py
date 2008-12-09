@@ -10,20 +10,20 @@ __author__ = "$Author$"
 __version__ = "$Rev$"
 __date__ = "$Date$"
 
-import optimus
-if optimus.WITH_PSYCO:
-    from psyco.classes import psyobj, psymetaclass, __metaclass__
-
-import log
-DEBUG_LEVEL = log.SILENT
 
 import random
+
+import logging
+logger = logging.getLogger('dice')
+
+__all__ = ['D10', 'Dice', 'DiceError', 'NotIntegerError', 
+           'OutOfRangeError', 'ParetoLowDice', 'parse', 'roller']
 
 class DiceError(Exception): pass
 class OutOfRangeError(DiceError): pass
 class NotIntegerError(DiceError): pass
 
-def parse(dstr):
+def parse(d):
     """Parse a dice specifier string.  Return a dice specifier tuple.
 
     6-sided dice are the defaults.
@@ -32,7 +32,7 @@ def parse(dstr):
     "4d-2" returns (4, 6, -2)
     "1d12" returns (1, 12, 0)
     """
-    dice, dtype_mod = dstr.split('d')
+    dice, dtype_mod = d.split('d')
 
     # Sane defaults.
     dnum = 1
@@ -101,10 +101,13 @@ class Dice(object):
         except ValueError:
             raise NotIntegerError, 'arguments must be coercable to ints.'
         results = self.roll(num, sides, each_mod)
-        log.out("Rolled %s" % (results,), DEBUG_LEVEL)
         return sum(results) + total_mod
 
     def rollbell(self, min_num, max_num, dist_ratio=2.0):
+        """Roll bell-shaped dice.
+
+        Return a value between min_num and max_num.
+        """
         mean_distance = (max_num - min_num) / 2.0
         mean = max_num - mean_distance
         sdev = abs(max_num - min_num) / dist_ratio
@@ -115,11 +118,19 @@ class Dice(object):
         return result
 
     def rollbellFloat(self, min_num, max_num):
-        """Roll a bell curve distribution between min and max.
+        """Roll bell-shaped floating dice.
+
+        Return a value on a bell curve distribution between min_num
+        and max_num.
         """
         return float(self.rollbell(min_num, max_num))
 
     def rollbellInt(self, min_num, max_num):
+        """Roll bell-shaped discrete dice.
+
+        Return an integer value on a bell curve distribution between
+        min_num and max_num.
+        """
         return int(round(self.rollbell(min_num, max_num)))
 
 
@@ -156,9 +167,11 @@ class ParetoLowDice(Dice):
     for a = 10, the Pareto distribution falls neatly across the period
     1 < n < 2, with 1 being the most common and probability falling
     off as it approaches and exceeds 2.
+
+    WARNING: This isn't tested very well yet.
     """
     def __init__(self, state=random.getstate(), alpha=10):
-        super(ParetoDice, self).__init__(state)
+        super(ParetoLowDice, self).__init__(state)
         self.alpha = alpha
         
     def randParetoRange(self, low, high, alpha):
@@ -215,6 +228,10 @@ class ParetoLowDice(Dice):
         return results
 
 class D10(Dice):
+    """Example subclass of dice, implementing a bag of D10s.
+
+    Useful for White Wolf's Storyteller system.
+    """
     def roll(self, num, target=6, reroll=False):
         allrolls = []
         thisroll = super(D10, self).roll(num, 10, sort=True)
@@ -266,7 +283,3 @@ def _checkVariation(func, args, low, high, num):
     return (num, lowball, highball)
 
 roller = Dice()
-
-if __name__ == "__main__":
-    import testoob
-    testoob.main()

@@ -29,7 +29,7 @@ APP_OPTIONS = {'argv_emulation': False,
                #'excludes': ['pkg_resources',],
                #'includes': ['pkg_resources',],
                }
-INSTALL_REQUIRES=[]
+INSTALL_REQUIRES=['ConfigObj>=4.5.3', 'yapps']
 GUI_SCRIPTS = []
 SCRIPTS = []
 ZIP_SAFE = True
