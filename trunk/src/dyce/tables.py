@@ -3,14 +3,14 @@
 
 Dice tables are written in INI format. See tests/stars.ini for an example.
 
-$Author$
-$Rev: 515 $
-$Date: 2007-09-27 18:41:36 -0500 (Thu, 27 Sep 2007) $
+$Author$\n
+$Rev$\n
+$Date$
 """
 
-__author__ = "$Author$"
-__version__ = "$Rev: 515 $"
-__date__ = "$Date: 2007-09-27 18:41:36 -0500 (Thu, 27 Sep 2007) $"
+__author__ = "$Author$"[9:-2]
+__version__ = "$Rev$"[6:-2]
+__date__ = "$Date$"[7:-2]
 
 import os
 import configobj

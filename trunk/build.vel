@@ -5,19 +5,21 @@ imports[module(from 'remove')
 
 depends(
     bootstrap ['dirs']
-    buildout ['bootstrap' 'dirs']
+    buildout ['bootstrap' 'dirs' 'dcalc']
     buildout_offline ['bootstrap' 'dirs']
     clean_all ['clean_dist' 'clean_docs' 'clean_env']
     clean []
     clean_build ['clean']
     clean_env ['clean']
     clean_dist ['clean_build']
-    docs ['dirs']
+    dist ['dcalc' 'docs']
+    docs ['dirs' 'dcalc']
     rebuild ['clean_env' 'buildout']
     run ['buildout']
     debug ['buildout']
     headless ['buildout']
     py2app ['buildout']
+    test ['dcalc']
     )
 
 targets(
@@ -56,10 +58,12 @@ targets(
                       force "True")
                ]
     clean_dist [remove(paths ['dist'] force "True")]
-    dirs mkdirs(paths ["downloads"]
+    dirs mkdirs(paths ["downloads" "docs" "docs/html" "docs/html/api"]
         mode 0755)
-    docs $ epydoc --config epydoc.config
+    docs $ epydoc -v --config epydoc.config
     rebuild py [|pass
                  ]
     test $ ./bin/nosetests -vxd
+    dist [$ python setup.py sdist
+         ]
     )

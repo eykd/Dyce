@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 """dice - a bag of dice, various shapes and sizes
 
-$Author$
-$Rev$
+$Author$\n
+$Rev$\n
 $Date$
 """
 
-__author__ = "$Author$"
-__version__ = "$Rev$"
-__date__ = "$Date$"
+__author__ = "$Author$"[9:-2]
+__version__ = "$Rev$"[6:-2]
+__date__ = "$Date$"[7:-2]
 
 
 import random

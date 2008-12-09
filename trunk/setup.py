@@ -1,16 +1,33 @@
 # -*- coding: utf-8 -*-
 """setup -- setuptools setup file for dyce.
 
-$Author$
-$Rev$
+$Author$\n
+$Rev$\n
 $Date$
 """
 
-__author__ = "$Author$"
+__author__ = "$Author$"[9:-2]
 __revision__ = "$Rev$"
+__date__ = "$Date$"[7:-2]
+
 __version__ = "0.2"
-__release__ = '.r'.join((__version__, __revision__[6:-2]))
-__date__ = "$Date$"
+__release__ = '.r'.join((__version__, __revision__))
+
+__description__ = "Randomizer toolkit, with custom dice expression parser."
+__long_description__ = """Dyce is a toolkit for rolling dice. It's a friendly wrapper around python's random module.
+
+Dyce also has a mini-language for expressing random number patterns, including common dice notation (i.e. "3d6+5" for rolling thre six-sided dice and adding 5 to the result), making it ideal for easily storing random number patterns in config files.
+"""
+__classifiers__ = ["Development Status :: 3 - Alpha",
+                   "Environment :: Console",
+                   "Intended Audience :: Developers",
+                   "License :: OSI Approved :: MIT License",
+                   "Natural Language :: English",
+                   "Operating System :: OS Independent",
+                   "Programming Language :: Python",
+                   "Topic :: Games/Entertainment",
+                   "Topic :: Games/Entertainment :: Role-Playing",
+                   "Topic :: Software Development :: Libraries",]
 
 import sys
 
@@ -22,37 +39,19 @@ except ImportError:
 
 from setuptools import setup, find_packages
 
-APP = []
-DATA_FILES = []
-APP_OPTIONS = {'argv_emulation': False,
-               'optimize': '2',
-               #'excludes': ['pkg_resources',],
-               #'includes': ['pkg_resources',],
-               }
 INSTALL_REQUIRES=['ConfigObj>=4.5.3', 'yapps']
-GUI_SCRIPTS = []
-SCRIPTS = []
 ZIP_SAFE = True
-
-if sys.platform == 'darwin':
-    extra_options = dict(
-        setup_requires=['py2app',],
-        app=APP,
-        options={'py2app':APP_OPTIONS},
-        )
-elif sys.platform == 'win32':
-    extra_options = dict(
-        setup_requires=['py2exe'],
-        app=APP,
-        )
-else:
-    extra_options = dict(
-        )
 
 setup(
     name = "dyce",
     version = __version__,
     author = "David Eyk",
+    author_email = "eykd@eykd.net",
+    url = "http://code.google.com/p/dyce/",
+    description = __description__,
+    long_description = __long_description__,
+    download_url = "http://code.google.com/p/dyce/downloads/list",
+    classifiers = __classifiers__,
 
     package_dir = {'': 'src',},
     packages = find_packages('src'),
@@ -61,14 +60,9 @@ setup(
     exclude_package_data = {'src':['*.c', '*.h',  '*.pyx', '*.pxd', '*.g']},
     #data_files=['src/data',],
 
-    entry_points={'gui_scripts': GUI_SCRIPTS,
-                  'scripts': SCRIPTS},
-    scripts=APP,
-
     install_requires=INSTALL_REQUIRES,
     zip_safe = ZIP_SAFE,
 
     test_suite = "nose.collector",
-    **extra_options
     )
 
