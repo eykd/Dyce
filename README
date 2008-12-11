@@ -15,12 +15,27 @@ Dyce has been tested on python 2.4 and 2.5. It will probably work on
 David Eyk
 eykd@eykd.net
 
+
 Installation
 ============
 
 Install Dyce using the standard distutils method:
 
   $ python setup.py install
+
+Dyce can also be installed with easy_install:
+
+ $ easy_install Dyce
+
+
+Documentation
+=============
+
+API documentation can be found at <http://worlds.eykd.net/dyce/api/>.
+
+For more information about Dyce, please visit the project site at
+<http://code.google.com/p/dyce/>.
+
 
 Development and Testing
 =======================
@@ -37,5 +52,3 @@ Everything's a little easier if you use `Vellum
   $ vellum test
 
 Hopefully, you'll find Dyce easy to work with and adapt.
-
-.. _Vellum: 

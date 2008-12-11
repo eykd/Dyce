@@ -1,0 +1,30 @@
+=================
+ Hacking on Dyce
+=================
+
+An issue tracker and the latest sources can be found at
+<http://code.google.com/p/dyce/>. Currently, the project is in need
+of:
+
+ * Test suite improvements, especially:
+
+   * dcalc.py -- currently untested.
+
+   * tables.py -- currently only one bare test.
+
+ * Documentation improvements:
+
+   * tables.py -- currently undocumented, especially the file format.
+
+   * dice.py -- currently undocumented, needs some examples
+
+   * some example usages in a separate "examples" folder would be
+     nice.
+
+ * Extensions:
+
+   * dcalc.py could use some extensions to the mini-language
+
+   * tables.py is very rudimentary and could use extension
+
+   * Any other ideas would be appreciated!
