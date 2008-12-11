@@ -61,6 +61,8 @@ targets(
     dirs mkdirs(paths ["downloads" "docs" "docs/html" "docs/html/api"]
         mode 0755)
     docs $ epydoc -v --config epydoc.config
+    upload_docs [$ rsync -avz --delete docs/html/api/ eykd.net:/home/eykd/webapps/net_eykd_worlds__static/dyce/api/
+                 ]
     rebuild py [|pass
                  ]
     test $ ./bin/nosetests -vxd
