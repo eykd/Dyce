@@ -23,10 +23,6 @@ depends(
     )
 
 targets(
-    update [$ rm -f ./ez_setup.py
-            $ wget http://peak.telecommunity.com/dist/ez_setup.py
-            ]
-
     bootstrap [unless "os.path.exists('./bin/buildout')"
                $ python2.5 bootstrap.py
                ]
@@ -36,8 +32,16 @@ targets(
     buildout_offline [unless "os.path.exists('./bin/python-local')"
               $ ./bin/buildout -o
               ]
-    dcalc [$ yapps2 ./src/dyce/dcalc.g ./src/dyce/dcalc.py 
-           ]
+    changelog [$ svn up
+               $ svn2cl
+               ]
+    ci [$ touch CHANGES
+        $ svn ci -F ./CHANGES
+        $ svn up
+        $ svn2cl
+        $ rm ./CHANGES
+        $ touch CHANGES
+        ]
     clean [forall(files "*.pyc" var "file" do remove(paths ["%(file)s"]))
            forall(files "*~" var "file" do remove(paths ["%(file)s"]))
            forall(files "*.pyo" var "file" do remove(paths ["%(file)s"]))
@@ -47,8 +51,11 @@ targets(
            forall(files "*.log*" var "file" do remove(paths ["%(file)s"]))
            ]
     clean_docs [remove(paths ['docs'] force "True")]
+
     clean_build [remove(paths ['build'] force "True")]
+
     clean_buildout remove(paths ['bin/python-local'])
+
     clean_env [remove(paths ['downloads'
                              'develop-eggs'
                              'parts'
@@ -58,14 +65,23 @@ targets(
                       force "True")
                ]
     clean_dist [remove(paths ['dist'] force "True")]
+
+    dcalc [$ yapps2 ./src/dyce/dcalc.g ./src/dyce/dcalc.py 
+           ]
     dirs mkdirs(paths ["downloads" "docs" "docs/html" "docs/html/api"]
         mode 0755)
+    dist [$ python setup.py sdist
+
     docs $ epydoc -v --config epydoc.config
-    upload_docs [$ rsync -avz --delete docs/html/api/ eykd.net:/home/eykd/webapps/net_eykd_worlds__static/dyce/api/
-                 ]
+
     rebuild py [|pass
                  ]
     test $ ./bin/nosetests -vxd
-    dist [$ python setup.py sdist
+
+    update [$ rm -f ./ez_setup.py
+            $ wget http://peak.telecommunity.com/dist/ez_setup.py
+            ]
+    upload_docs [$ rsync -avz --delete docs/html/api/ eykd.net:/home/eykd/webapps/net_eykd_worlds__static/dyce/api/
+                 ]
          ]
     )
