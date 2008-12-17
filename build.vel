@@ -13,7 +13,7 @@ depends(
     clean_build ['clean']
     clean_env ['clean']
     clean_dist ['clean_build']
-    dist ['dcalc' 'docs' 'prepare_dist']
+    dist ['dcalc' 'docs' 'prepare_dist' 'upload_docs']
     docs ['clean_docs' 'dirs' 'dcalc']
     rebuild ['clean_env' 'buildout']
     run ['buildout']
