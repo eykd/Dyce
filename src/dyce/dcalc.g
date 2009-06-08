@@ -97,13 +97,13 @@ parser DiceCalculator:
     token VAR: "[a-zA-Z_]+"
 
     # Each line can either be an expression or an assignment statement
-    rule goal:   expr<<[]>> END            {{ logger.info(' =%s', expr) }}
+    rule goal:   expr<<[]>> END            {{ logger.debug(' =%s', expr) }}
                                            {{ return expr }}
                | "set" VAR expr<<[]>> END  {{ globalvars[VAR] = expr }}
-                                           {{ logger.info(' %s=%s', VAR, expr) }}
+                                           {{ logger.debug(' %s=%s', VAR, expr) }}
                                            {{ return expr }}
 
-               | "u\\(" expr<<[]>> "," VAR "\\)" END  {{ logger.info(' =(%s, "%s")', expr, VAR)}}
+               | "u\\(" expr<<[]>> "," VAR "\\)" END  {{ logger.debug(' =(%s, "%s")', expr, VAR)}}
                                                           {{ return (expr, str(VAR)) }}
 
     # An expression is the sum and difference of factors
