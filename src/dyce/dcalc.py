@@ -132,7 +132,7 @@ class DiceCalculator(yappsrt.Parser):
         if _token not in ['"set"', '"u\\\\("']:
             expr = self.expr([], _context)
             END = self._scan('END')
-            logger.info(' =%s', expr)
+            logger.debug(' =%s', expr)
             return expr
         elif _token == '"set"':
             self._scan('"set"')
@@ -140,7 +140,7 @@ class DiceCalculator(yappsrt.Parser):
             expr = self.expr([], _context)
             END = self._scan('END')
             globalvars[VAR] = expr
-            logger.info(' %s=%s', VAR, expr)
+            logger.debug(' %s=%s', VAR, expr)
             return expr
         else: # == '"u\\\\("'
             self._scan('"u\\\\("')
@@ -149,7 +149,7 @@ class DiceCalculator(yappsrt.Parser):
             VAR = self._scan('VAR')
             self._scan('"\\\\)"')
             END = self._scan('END')
-            logger.info(' =(%s, "%s")', expr, VAR)
+            logger.debug(' =(%s, "%s")', expr, VAR)
             return (expr, str(VAR))
 
     def expr(self, V, _parent=None):
