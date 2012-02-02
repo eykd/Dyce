@@ -12,9 +12,7 @@ __author__ = "$Author$"[9:-2]
 __version__ = "$Rev$"[6:-2]
 __date__ = "$Date$"[7:-2]
 
-import os
 import configobj
-import dice
 import dcalc
 
 import logging
@@ -22,13 +20,15 @@ logger = logging.getLogger('tables')
 
 _loaded = {}
 
+
 def getTable(name):
     """Get a results table by name.
     """
     if name in _loaded:
         return _loaded[name]
     else:
-        raise NameError, "No table named '%s' loaded" % (name)
+        raise NameError("No table named '%s' loaded" % (name))
+
 
 def loadTable(fo, name):
     """Load the given file object and name it.
@@ -39,6 +39,7 @@ def loadTable(fo, name):
     co = configobj.ConfigObj(fo)
     _loaded[name] = co
     return co
+
 
 def rollTable(tbl, mod=0):
     """Roll against a dice/result table.
@@ -59,13 +60,13 @@ def rollTable(tbl, mod=0):
         i = rolls.index(r)
         try:
             result = results[i]
-        except IndexError, e:
-            raise IndexError, \
+        except IndexError:
+            raise IndexError(
                 """Roll: %s
 Index: %s in rolls:
 %s (length %s)
 no corresponding index for roll in
-%s (length %s)""" % (r, i, rolls, len(rolls), results, len(results))
+%s (length %s)""" % (r, i, rolls, len(rolls), results, len(results)))
     else:
         result = r
         

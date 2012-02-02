@@ -80,10 +80,11 @@ duni = drand.uniform
 
 globalvars = {}       # We will store the calculator variables here
 
+
 def lookup(map, name):
-    for x,v in map:  
+    for x, v in map:  
         if x == name: return v
-    if not globalvars.has_key(name): 
+    if not name in globalvars:
         logger.info('Undefined (defaulting to 0): %s', name)
     return globalvars.get(name, 0)
 
@@ -140,6 +141,7 @@ def calculate(dice_str):
     """
     return parse('goal', dice_str)
 
+
 class Dstr(object):
     """A class wrapper around a dice expression. 
 
@@ -184,8 +186,7 @@ if __name__=='__main__':
     DEBUG_LEVEL = 10
     while 1:
         try: s = raw_input('>>> ')
-	except EOFError: break
+        except EOFError: break
         if not strip(s): break
         parse('goal', s)
     print 'Bye.'
-

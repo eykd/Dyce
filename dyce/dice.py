@@ -6,11 +6,6 @@ $Rev$\n
 $Date$
 """
 
-__author__ = "$Author$"[9:-2]
-__version__ = "$Rev$"[6:-2]
-__date__ = "$Date$"[7:-2]
-
-
 import random
 
 import logging
@@ -19,9 +14,15 @@ logger = logging.getLogger('dice')
 __all__ = ['D10', 'Dice', 'DiceError', 'NotIntegerError', 
            'OutOfRangeError', 'ParetoLowDice', 'parse', 'roller']
 
+
 class DiceError(Exception): pass
+
+
 class OutOfRangeError(DiceError): pass
+
+
 class NotIntegerError(DiceError): pass
+
 
 def parse(d):
     """Parse a dice specifier string.  Return a dice specifier tuple.
@@ -53,10 +54,8 @@ def parse(d):
     dice, dtype_mod = d.split('d')
 
     # Sane defaults.
-    dnum = 1
     dtype = 6
     mod = 0
-    mult = 1
     
     if dtype_mod:
         if '-' in dtype_mod:
@@ -72,7 +71,6 @@ def parse(d):
     if not mod: mod = 0
 
     return (int(dice), int(dtype), int(mod))
-
 
 
 class Dice(object):
@@ -138,13 +136,13 @@ class Dice(object):
             sides = int(sides)
             mod = int(mod)
         except ValueError:
-            raise NotIntegerError, 'arguments must be coercable to ints.'
+            raise NotIntegerError('arguments must be coercable to ints.')
         if num == 0 or sides == 0:
-            return [0,]
+            return [0]
         if not (num > 0):
-            raise OutOfRangeError, 'number of dice out of range; must be >= 0'
+            raise OutOfRangeError('number of dice out of range; must be >= 0')
         if not (sides > 0):
-            raise OutOfRangeError, 'number of sides out of range; must be >= 0'
+            raise OutOfRangeError('number of sides out of range; must be >= 0')
         results = []
         for i in range(num):
             results.append(self.rand.randrange(1, sides+1)+mod)
@@ -172,7 +170,7 @@ class Dice(object):
         try:
             total_mod = int(total_mod)
         except ValueError:
-            raise NotIntegerError, 'arguments must be coercable to ints.'
+            raise NotIntegerError('arguments must be coercable to ints.')
         results = self.roll(num, sides, each_mod)
         return sum(results) + total_mod
 
@@ -235,7 +233,6 @@ class Dice(object):
         """
         return int(round(self.rollbell(min_num, max_num)))
 
-
     def reset(self):
         """Reset the random generator to initial state.
         """
@@ -262,6 +259,7 @@ class Dice(object):
             distance = ratio
         result = num + (self.rand.uniform(0, distance) * sign)
         return result
+
 
 class ParetoLowDice(Dice):
     """Weighted dice, defaulting to low-rollers.
@@ -302,7 +300,6 @@ class ParetoLowDice(Dice):
         
         return the_range[the_index]
         
-
     def roll(self, num=1, sides=6, mod=0, sort=False, alpha=None):
         """Return a list of num random ints between 1 and sides, each += mod.
         """
@@ -311,14 +308,14 @@ class ParetoLowDice(Dice):
             sides = int(sides)
             mod = int(mod)
         except ValueError:
-            raise NotIntegerError, 'arguments must be coercable to ints.'
+            raise NotIntegerError('arguments must be coercable to ints.')
         if not (num >= 1):
-            raise OutOfRangeError, 'number of dice out of range; must be > 0'
+            raise OutOfRangeError('number of dice out of range; must be > 0')
         if not (sides >= 2):
-            raise OutOfRangeError, 'number of sides out of range; must be >= 2'
+            raise OutOfRangeError('number of sides out of range; must be >= 2')
         if alpha is not None:
             if not (alpha >= 1):
-                raise OutOfRangeError, 'alpha shape parameter out of range; must be > 0'
+                raise OutOfRangeError('alpha shape parameter out of range; must be > 0')
         else:
             # Use our default alpha.
             alpha = self.alpha
@@ -329,6 +326,7 @@ class ParetoLowDice(Dice):
         if sort:
             results.sort()
         return results
+
 
 class D10(Dice):
     """Example subclass of dice, implementing a bag of D10s.
@@ -354,12 +352,13 @@ class D10(Dice):
                % (successes, target, extra)
 
     def _countSuccesses(self, thisroll, target, double_tens=True, subtract_ones=True):
-        successes =  sum([int(result >= target) for result in thisroll])
+        successes = sum([int(result >= target) for result in thisroll])
         if double_tens:
             successes += thisroll.count(10)
         if subtract_ones:
             successes -= thisroll.count(1)
         return successes
+
 
 def _checkVariation(func, args, low, high, num):
     """Helper function to analyze the variation of a function above and below a range.

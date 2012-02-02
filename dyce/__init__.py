@@ -14,4 +14,3 @@ from dice import *
 from dcalc import *
 
 roller = Dice()
-
