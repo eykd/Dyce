@@ -27,9 +27,9 @@ __classifiers__ = ["Development Status :: 3 - Alpha",
                    "Programming Language :: Python",
                    "Topic :: Games/Entertainment",
                    "Topic :: Games/Entertainment :: Role-Playing",
-                   "Topic :: Software Development :: Libraries",]
+                   "Topic :: Software Development :: Libraries",
+                   ]
 
-import sys
 import os
 
 from paver.easy import *
@@ -58,8 +58,8 @@ setup(
     download_url = "http://code.google.com/p/dyce/downloads/list",
     classifiers = __classifiers__,
 
-    package_dir = {'': 'src',},
-    packages = find_package_data('src', 
+    package_dir = {'': 'dyce'},
+    packages = find_package_data('dyce', 
                                  exclude=('*.py', '*.pyc', '*~', 
                                           '.*', '*.bak', '*.swp*'), 
                                  exclude_directories=('.*', '.svn', './lib', 
@@ -68,8 +68,7 @@ setup(
                                                       '*.egg-info'),),
 
     include_package_data = True,
-    exclude_package_data = {'src':['*.c', '*.h',  '*.pyx', '*.pxd', '*.g']},
-    #data_files=['src/data',],
+    exclude_package_data = {'src': ['*.c', '*.h', '*.pyx', '*.pxd', '*.g']},
 
     install_requires=INSTALL_REQUIRES,
     zip_safe = ZIP_SAFE,
@@ -102,6 +101,7 @@ options(
         ),
     )
 
+
 def shv(cmd):
     """Execute the given shell command inside the virtual environment.
     """
@@ -115,12 +115,14 @@ def install_zipfile(pkg_url, use_ez_setup=False):
     sh('pushd %s; unzip "%s" -d %s; popd' % (tmp, tmp.files()[0], tmp))
     install_from_tmpdir(tmp, use_ez_setup)
 
+
 def install_tarball(pkg_url, use_ez_setup=False, tar_options='xzvf'):
     tmp = path(os.tmpnam())
     tmp.mkdir()
     sh('pushd %s; curl -O "%s"; popd' % (tmp, pkg_url))
     sh('pushd %s; tar -%s "%s"; popd' % (tmp, tar_options, tmp.files()[0]))
     install_from_tmpdir(tmp, use_ez_setup)
+
 
 def install_from_tmpdir(tmpdir, use_ez_setup=False):
     setup_dir = list(tmpdir.walkfiles("setup.py"))[0].dirname()
@@ -248,12 +250,14 @@ def clean_dist():
 def dcalc():
     shv('yapps2 ./src/dyce/dcalc.g ./src/dyce/dcalc.py')
 
+
 @task
 @needs('quickenv', 'clean_docs', 'mkdirs')
 def docs():
     """Generate documentation.
     """
     shv('epydoc -v --config epydoc.config')
+
 
 @task
 @needs('quickenv')
@@ -264,6 +268,7 @@ def easy_install():
     args = options.args
     shv('easy_install %s' % ' '.join(args))
 
+
 @task
 def mkdirs():
     """Make directories.
@@ -273,7 +278,6 @@ def mkdirs():
         if not p.exists():
             p.makedirs()
     
-
 
 @task
 @needs('quickenv')
@@ -294,6 +298,7 @@ def release_dist():
         '--summary=`pwd|sed -E sN/.+/NN` --project=Owyl --labels=`pwd|'
         'sed -E sN/.+/NN` `ls dist`')
 
+
 @task
 @needs('docs', 'generate_setup', 'minilib')
 def sdist():
@@ -301,10 +306,10 @@ def sdist():
     """
     pass
 
+
 @task
 @needs('quickenv')
 def test():
     """Run tests in nose.
     """
     shv('nosetests -vxds')
-
