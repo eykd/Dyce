@@ -1,17 +1,7 @@
 # -*- coding: utf-8 -*-
 """pavement -- setuptools setup file for dyce.
-
-$Author$\n
-$Rev: 9 $\n
-$Date: 2008-12-09 19:39:47 -0600 (Tue, 09 Dec 2008) $
 """
-
-__author__ = "$Author$"[9:-2]
-__revision__ = "$Rev: 9 $"
-__date__ = "$Date: 2008-12-09 19:39:47 -0600 (Tue, 09 Dec 2008) $"[7:-2]
-
 __version__ = "0.3"
-__release__ = '.r'.join((__version__, __revision__))
 
 __description__ = "Randomizer toolkit, with custom dice expression parser."
 __long_description__ = """Dyce is a toolkit for rolling dice. It's a friendly wrapper around python's random module.
@@ -52,10 +42,10 @@ setup(
     version = __version__,
     author = "David Eyk",
     author_email = "eykd@eykd.net",
-    url = "http://code.google.com/p/dyce/",
+    url = "http://github.com/eykd/dyce/",
     description = __description__,
     long_description = __long_description__,
-    download_url = "http://code.google.com/p/dyce/downloads/list",
+    download_url = "http://pypi.python.org/pypi/dyce/",
     classifiers = __classifiers__,
 
     package_dir = {'': 'dyce'},
@@ -68,7 +58,7 @@ setup(
                                                       '*.egg-info'),),
 
     include_package_data = True,
-    exclude_package_data = {'src': ['*.c', '*.h', '*.pyx', '*.pxd', '*.g']},
+    exclude_package_data = {'': ['*.c', '*.h', '*.pyx', '*.pxd', '*.g']},
 
     install_requires=INSTALL_REQUIRES,
     zip_safe = ZIP_SAFE,
@@ -96,7 +86,7 @@ options(
             'http://www.voidspace.org.uk/cgi-bin/voidspace/downman.py?section=python&file=configobj-4.5.3.zip',
             ],
         tgz=[
-            'http://theory.stanford.edu/~amitp/yapps/yapps2.1.1.tar.gz',
+            'http://theory.stanford.edu/~amitp/yapps/yapps2-2.1.1-17.1.tar.gz',
             ],
         ),
     )
@@ -152,14 +142,6 @@ def env():
     """Set up the virtual environment.
     """
     sh('python bootstrap.py')
-
-
-@task
-def quickenv():
-    """Make sure that we have a virtual environment available.
-    """
-    if not (__path__ / 'bin/activate').exists():
-        env()
 
 
 def rmFilePatterns(*patterns):
@@ -246,13 +228,12 @@ def clean_dist():
 
 
 @task
-@needs('quickenv')
 def dcalc():
     shv('python ./dyce/yapps2.py ./dyce/dcalc.g ./dyce/dcalc.py')
 
 
 @task
-@needs('quickenv', 'clean_docs', 'mkdirs')
+@needs('clean_docs', 'mkdirs')
 def docs():
     """Generate documentation.
     """
@@ -260,7 +241,6 @@ def docs():
 
 
 @task
-@needs('quickenv')
 @consume_args
 def easy_install():
     """Run easy_install on the given args in the virtualenv.
@@ -280,7 +260,6 @@ def mkdirs():
     
 
 @task
-@needs('quickenv')
 def prepare_dist():
     """Prepare a distribution for release.
     """
@@ -308,7 +287,6 @@ def sdist():
 
 
 @task
-@needs('quickenv')
 def test():
     """Run tests in nose.
     """
