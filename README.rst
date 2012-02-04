@@ -19,13 +19,17 @@ eykd@eykd.net
 Installation
 ============
 
-Install Dyce using the standard distutils method:
+Install Dyce using the standard distutils method::
 
   $ python setup.py install
 
-Dyce can also be installed with easy_install:
+Dyce can also be installed with pip or easy_install::
 
- $ easy_install Dyce
+  $ pip install Dyce
+
+or::
+
+  $ easy_install Dyce
 
 
 Documentation
