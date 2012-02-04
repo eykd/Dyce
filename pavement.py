@@ -248,7 +248,7 @@ def clean_dist():
 @task
 @needs('quickenv')
 def dcalc():
-    shv('yapps2 ./src/dyce/dcalc.g ./src/dyce/dcalc.py')
+    shv('python ./dyce/yapps2.py ./dyce/dcalc.g ./dyce/dcalc.py')
 
 
 @task
