@@ -34,21 +34,25 @@ Documentation
 API documentation can be found at <http://worlds.eykd.net/dyce/api/>.
 
 For more information about Dyce, please visit the project site at
-<http://code.google.com/p/dyce/>.
+<https://github.com/eykd/dyce>.
 
 
 Development and Testing
 =======================
 
-To develop and test Dyce, use buildout to set up your environment:
+To develop and test Dyce, use `Paver
+<http://paver.github.com/paver/>`_ to set up your virtual environment:
+
+With Paver:
+
+  $ paver env
+  $ source bin/activate
+  $ paver test
+
+From scratch:
 
   $ python bootstrap.py
-  $ ./bin/buildout
-  $ ./bin/nosetests -vxd
-
-Everything's a little easier if you use `Vellum
-<https://launchpad.net/vellum/>`_.
-
-  $ vellum test
+  $ source bin/activate
+  $ paver test
 
 Hopefully, you'll find Dyce easy to work with and adapt.

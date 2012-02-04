@@ -167,28 +167,6 @@ def rmDirPatterns(*patterns):
 
 
 @task
-def changelog():
-    """Update the changelog.
-    """
-    sh('svn up')
-    sh('svn2cl --include-rev --include-actions')
-
-
-@task
-def ci():
-    """Check in changes.
-    """
-    sh("touch CHANGES")
-    sh("echo '' >> CHANGES")
-    sh("cat CHANGES|cat ChangeLog > /tmp/out && mv /tmp/out ChangeLog")
-    sh("svn ci --force-log -F ./CHANGES")
-    sh("svn up")
-    sh("svn2cl --include-rev --include-actions")
-    sh("rm ./CHANGES")
-    sh("touch CHANGES")
-
-
-@task
 def clean():
     """Clean up temporary files.
     """
@@ -264,7 +242,6 @@ def prepare_dist():
     """Prepare a distribution for release.
     """
     shv('python setup.py setopt -c egg_info -o tag_build -r')
-    shv('python setup.py setopt -c egg_info -o tag_svn_revision -r')
 
 
 @task
@@ -273,9 +250,6 @@ def release_dist():
     """Release a distribution.
     """
     shv('python setup.py register sdist bdist_egg upload')
-    shv('python ./googlecode_upload.py --config-dir=~/.subversion/auth'
-        '--summary=`pwd|sed -E sN/.+/NN` --project=Owyl --labels=`pwd|'
-        'sed -E sN/.+/NN` `ls dist`')
 
 
 @task
