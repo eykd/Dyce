@@ -43,13 +43,13 @@ Development and Testing
 To develop and test Dyce, use `Paver
 <http://paver.github.com/paver/>`_ to set up your virtual environment:
 
-With Paver:
+With Paver::
 
   $ paver env
   $ source bin/activate
   $ paver test
 
-From scratch:
+From scratch::
 
   $ python bootstrap.py
   $ source bin/activate
